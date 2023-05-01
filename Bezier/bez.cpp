@@ -21,25 +21,37 @@ vector<float> vy = {2, 5, 5, 2};
 // e também será chamada com as ordenadas, ou seja, com o vetor 2, 4, 5
 
 //mude essa variável para usar a função bezier (recursiva) ou bezier2 (não recursiva)
-int metodo = BEZIER_RECURSIVA;
+int metodo = BEZIER_NAORECURSIVA;
 
 //implementacao recursiva (nao use memoization para comparar os tempos)
 //retorna o ponto da curva bezier em t considerando os pontos Pa, ..., Pb
 //essa função deve ficar consideravelmente lenta a partir de 8+ pontos
 float bezier1(vector<float> v, int a, int b, float t) {
-    if (b-a == 0){
+	if (b-a == 0){
         return v[a];
     }else{
         return ((1-t) * bezier1(v, a, b-1, t)) + (t * bezier1(v, a+1, b, t));
     }
-	return 0;
 }
 
 //implementacao nao recursiva
 //retorna o ponto da curva bezier em t considerando os pontos P0, ..., Pv.size()-1
 //essa implementação deve ser mais eficiente que a recursiva sem memoization
 float bezier2(vector<float> v, float t) {
-	return 0;
+    int n = v.size();
+    vector<float> q(n);
+
+    for(int i = 0; i<n; i++){
+        q[i] = v[i];
+    }
+
+    for (int i = 1; i<n; i++){
+        for (int e = 0; e < n-i; e++){
+            q[e] = ((1-t)*q[e]) + t*(q[e+1]);
+        }
+    }
+
+	return q[0];
 }
 
 //################################################################
